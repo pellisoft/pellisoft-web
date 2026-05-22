@@ -1,4 +1,4 @@
-﻿# Pellisoft Web
+# Pellisoft Web
 
 Web corporativa de Pellisoft — Software industrial y empresarial desde Teruel.
 
