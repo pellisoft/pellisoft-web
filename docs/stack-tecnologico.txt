@@ -1,0 +1,52 @@
+1. El Stack Tecnológico: Next.js + Tailwind CSS + GSAP
+Framework: Next.js (React)
+Es el estándar de la industria para aplicaciones web modernas por varias razones:
+
+Rendimiento (Core Web Vitals): Al ser una empresa de software, tu web debe cargar instantáneamente. Next.js permite el renderizado híbrido (SSG/SSR), asegurando que la primera pintura sea casi inmediata.
+
+SEO Técnico: Fundamental para que Pellisoft aparezca en búsquedas de "software industrial" o "SaaS factura".
+
+Estilizado: Tailwind CSS
+Para lograr la paleta de Negro Carbón, Verde Encina y Arcilla con precisión quirúrgica:
+
+Consistencia Visual: Permite definir un sistema de diseño (tokens) para que todos los bordes, sombras y efectos de glassmorphism sean idénticos en toda la web.
+
+Optimización: Solo carga el CSS que realmente se usa, manteniendo la web ligera.
+
+Animaciones: GSAP (GreenSock Animation Platform)
+Aquí es donde ocurre la magia de las transiciones que pediste:
+
+Control Total: A diferencia de las animaciones CSS simples, GSAP permite encadenar movimientos complejos (como los hilos de datos en la sección MES) con una suavidad profesional.
+
+ScrollTrigger: Para que los elementos aparezcan o se muevan (parallax) exactamente cuando el usuario hace scroll, creando esa experiencia inmersiva.
+
+2. Infraestructura y Despliegue (DevOps)
+Hosting: Vercel o Netlify. Ofrecen despliegue continuo (cada vez que haces un cambio en el código, se actualiza la web) y una red de entrega de contenido (CDN) global, para que tu web vuele tanto en Teruel como en Tokyo.
+
+Backend para el Formulario: Resend + React Email. Para que cuando alguien use el formulario de contacto, recibas un correo con un diseño tan limpio como la propia web.
+
+3. ¿Por qué esta elección?
+Un arquitecto elige tecnologías basándose en escalabilidad y mantenimiento. Con este stack:
+
+Es escalable: Si mañana decides añadir un panel de cliente para tu software de facturación, la base ya está lista.
+
+Es "Future-proof": No tendrás que rediseñar la arquitectura en 5 años; estas tecnologías son el presente y futuro del desarrollo web.
+
+Refleja el Producto: Un cliente que ve una web que se mueve a 60fps con transiciones de alta gama confía en que tu sistema MES tendrá la misma calidad.
+
+
+#######################################
+
+Como arquitecto web para Pellisoft, la decisión de usar Next.js, Tailwind CSS y GSAP no es solo estética, sino estratégica para proyectar una imagen de software de alta gama y robustez industrial.A continuación, detallo cómo se integraría el formulario de contacto y las muestras de éxito, utilizando elementos de diseño inspirados en la identidad de Teruel (como la tierra arcillosa y la piedra pizarra).1. El Formulario de Contacto: "Pellisoft Connect"Este componente es el cierre de la experiencia de usuario. Para mantener el nivel de modernidad, se diseña como un módulo de alta tecnología:Interfaz de Cristal (Glassmorphism): El formulario flota en una tarjeta translúcida sobre el fondo Aragon-Slate (Pizarra), permitiendo que los sutiles gradientes verdes del fondo se filtren a través de él.Campos Inteligentes:Focus Animado: Al seleccionar un campo, el borde cambia de un gris piedra a un Aragon-Earth (Arcilla) vibrante, simulando la activación de un circuito.Validación en Tiempo Real: Si el email es incorrecto, la línea de base pulsa suavemente en rojo; si es correcto, emite un breve destello en Verde Encina.Botón de Acción Directa: Un botón con estilo "prose" de gran formato que, al ser presionado, ejecuta una micro-animación de carga estilo terminal de datos.2. Galería de Servicios y Casos de ÉxitoPara mostrar lo que Pellisoft puede hacer (Sistemas MES, TPV, Facturación), utilizaremos una estructura de Bento Grid que permite organizar información técnica de manera visual:Bloque VisualContenido de MuestraPropósito TécnicoCaso MES IndustrialDigitalización de planta en TeruelOptimización de procesos en tiempo real.Módulo FacturaciónDashboard de control financieroGestión legal y financiera centralizada.Soporte & ADN"Talento local, código global"Valores de la empresa y conexión con el territorio.3. Estrategia de Analítica y FuturoComo arquitecto, recomiendo implementar:Analítica de Privacidad: Uso de herramientas como Plausible o Fathom que respetan la privacidad (ideal para entorno Enterprise SaaS) y no requieren molestos banners de cookies que rompan la estética moderna.Blog dinámico: Un sistema de gestión de contenidos (CMS) como Sanity o Contentful para publicar noticias sobre el sector del software en Aragón, manteniendo la coherencia tipográfica (Serif para títulos, Sans para lectura) que otorga elegancia editorial.Esta arquitectura asegura que la web de Pellisoft sea tan eficiente y precisa como los sistemas MES que desarrolla para sus clientes.
+
+
+#######################
+STACK FINAL
+Esquema de la Arquitectura Propuesta:
+Frontend (Next.js): El "traje" moderno con las animaciones GSAP.
+
+API Layer (Next.js API Routes): Pequeños puentes de código que conectan el formulario con el email.
+
+CMS (Sanity): Donde guardas las fotos y textos de tus proyectos de software.
+
+Servicios Externos: Resend (Email) y Supabase (Base de datos).

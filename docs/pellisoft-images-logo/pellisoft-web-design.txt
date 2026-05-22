@@ -1,0 +1,77 @@
+DISEÑO WEB PELLISOFT
+He diseñado esta One Page siguiendo la tendencia Clean Tech o Neo-Brutalism refinado, utilizando la paleta que definimos (Negro Carbón, Verde Encina, Arcilla) y estructurando la información para que sea extremadamente digerible.
+
+Descripción de la Experiencia Visual y Transiciones (Mockup de la Imagen)
+Imagina esta pantalla no como una foto fija, sino como un lienzo dinámico. Así es como se comportaría el diseño de la imagen:
+
+1. Hero Section (Sección Superior): "Software con Raíces"
+
+Diseño: El logo "Pellisoft" (Verde) y el menú flotan sobre un fondo Negro Carbón. El titular principal combina el Verde Encina para la tecnología y la Arcilla para la tierra. A la derecha, un gráfico abstracto y minimalista de la "P" con nodos de datos.
+
+Transición / Efecto: Al cargar la página, el titular y el gráfico no aparecen de golpe, sino que hacen un "slide-up" suave con un ligero efecto de desenfoque inicial, creando una sensación de suavidad y velocidad. El gráfico de nodos tiene una micro-animación constante y sutil, como si los datos estuvieran "respirando".
+
+2. Sección de Servicios: El "Bento Grid"
+
+Diseño: Tres tarjetas limpias. Cada tarjeta tiene un borde de 1px en Verde o Arcilla.
+
+Transición / Efecto (Efecto "Holográfico" al Hover): Cuando el usuario pasa el ratón por encima de una tarjeta (como la de TPV), esta hace un ligero zoom y proyecta una sutil sombra de color (Verde o Arcilla) alrededor, como si flotara sobre la pantalla. Al mismo tiempo, el icono de la tarjeta hace un giro suave o una pulsación para confirmar la interacción.
+
+3. Sección "ADN Teruel": La "P" de Fondo
+
+Diseño: Una sección de ancho completo con una enorme "P" de fondo oscurecida (Verde Encina muy oscuro) y el texto "Desde Teruel, para el mundo".
+
+Transición / Efecto: Esta sección usa un efecto de Parallax. A medida que el usuario hace scroll hacia abajo, la "P" de fondo se mueve a una velocidad diferente que el texto, creando profundidad visual.
+
+4. Sección Blog / Muestras y Contacto
+
+Diseño: Dos tarjetas simples para el blog y un formulario de contacto minimalista en la tarjeta de la derecha. El botón de envío es un "fantasma" que se rellena de Verde al hover.
+
+Transición / Efecto: Los elementos de texto y las tarjetas de esta sección aparecen progresivamente a medida que el usuario hace scroll hacia abajo, como si se estuvieran construyendo frente a sus ojos (un efecto conocido como "Scroll Trigger").
+
+##############################################################
+
+Fase 1: Hero & Identidad Visual (La primera impresión)
+1. El Isotipo dinámico
+Diseño: El logo en la web no debe ser una imagen plana.
+
+Efecto "Glow" Orgánico: La "P" central tendrá un aura sutil en Verde Encina que parece latir muy lentamente, simbolizando el procesamiento de datos en tiempo real.
+
+Identidad de Color: La transición entre el verde y el arcilla representa la unión entre el código (digital) y la tierra de Teruel (físico/raíces).
+
+2. El Titular (Copywriting Técnico)
+Texto: "Sistemas MES, Facturación y TPV".
+
+Animación de Escritura: Podemos implementar un efecto donde las palabras "Sistemas MES", "Facturación" y "TPV" se intercambien con un efecto de glitch controlado o un desvanecimiento elegante, reforzando que Pellisoft es una solución integral.
+
+3. Navegación "Glassmorphism"
+Menú: Servicios, Casos, ADN y Contacto.
+
+Comportamiento: El menú debe ser "Sticky" (que te siga al bajar) pero con un fondo translúcido tipo cristal esmerilado sobre el Negro Carbón, para no perder nunca de vista el contenido.
+
+Fase 2: El "Bento Grid" de Servicios
+Esta es la parte más moderna de la UI:
+
+Sistemas MES Industrial (Caja Principal): Un gráfico que muestra una línea de producción conectada por hilos de luz hacia la base de datos de Pellisoft.
+
+Micro-interacción: Al pasar el cursor sobre la caja de Facturación SaaS, los iconos de facturas y monedas deben separarse ligeramente en el eje Z (efecto profundidad), dando la sensación de que el software es "tangible".
+
+
+#####################################################################################
+
+Diseño del Formulario: "The Command Center"
+Estética "Glassmorphism": El contenedor del formulario es una caja de cristal oscuro con un borde sutil en Verde Encina que brilla suavemente.
+
+Campos de Entrada (Inputs): En lugar de cajas blancas tradicionales, usaremos líneas de base finas. Al hacer clic para escribir, la línea se ilumina en Arcilla Teruel y un pequeño cursor de estilo "terminal" parpadea, reforzando la identidad de software.
+
+Micro-animación de Envío: El botón de "Enviar Mensaje" no solo cambia de color. Al pulsarlo, se transforma en una barra de carga que simula el envío de un paquete de datos. Una vez enviado, aparece un mensaje de éxito: "Conexión establecida. Nos pondremos en contacto desde Teruel pronto.".
+
+Estructura de la Sección
+Lateral Izquierdo (Info de Contacto):
+
+Ubicación: Un pequeño mapa estilizado en modo oscuro con un punto naranja (Arcilla) sobre Teruel.
+
+Datos: Email corporativo y acceso directo a soporte técnico.
+
+Lateral Derecho (El Formulario):
+
+Campos: Nombre, Empresa (opcional), Email y un área de texto para el proyecto.
