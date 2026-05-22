@@ -89,7 +89,7 @@ La web se despliega automáticamente en Vercel al hacer push a `main`.
 Para deploy manual:
 
 ```bash
-git push origin main
+git push pellisoft main
 ```
 
 Configurar las variables de entorno en el dashboard de Vercel antes del primer deploy.
