@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Menu, X, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -18,6 +18,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const shouldReduceMotion = useReducedMotion()
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -33,7 +34,7 @@ export default function Navbar() {
         el.scrollIntoView({ behavior: shouldReduceMotion ? 'auto' : 'smooth' })
       } else {
         // Section lives on the home page — navigate there
-        window.location.assign(`/${href}`)
+        router.push(`/${href}`)
       }
     }
   }

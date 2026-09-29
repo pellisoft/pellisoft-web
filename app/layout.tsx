@@ -27,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Pellisoft — Software industrial y empresarial',
+  title: 'Pellisoft — Software a medida para tu planta y tu negocio',
   description: 'Software a medida, automatización industrial y plataformas SaaS desde Andorra (Teruel) para el mundo.',
   icons: {
     icon: [{ url: '/icon.png', type: 'image/png' }],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     shortcut: '/icon.png',
   },
   openGraph: {
-    title: 'Pellisoft — Software industrial y empresarial',
+    title: 'Pellisoft — Software a medida para tu planta y tu negocio',
     description: 'Software a medida, automatización industrial y plataformas SaaS desde Andorra (Teruel) para el mundo.',
     url: SITE_URL,
     siteName: 'Pellisoft',
@@ -48,7 +48,7 @@ const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Pellisoft',
-  description: 'Software industrial y empresarial diseñado para escalar',
+  description: 'Software a medida, automatización industrial y plataformas SaaS',
   url: SITE_URL,
   email: CONTACT_EMAIL,
   address: {

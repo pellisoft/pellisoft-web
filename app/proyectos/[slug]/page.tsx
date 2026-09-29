@@ -7,7 +7,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import BrowserFrame from '@/components/ui/BrowserFrame'
 import ProjectGallery from '@/components/ui/ProjectGallery'
-import { displayUrl, getProject, getProjects } from '@/lib/projects'
+import { displayUrl, getProject, getProjects, PROJECT_KIND_LABEL } from '@/lib/projects'
 import { SITE_URL } from '@/lib/site'
 
 export const dynamicParams = false
@@ -57,7 +57,7 @@ export default async function ProyectoDetailPage({
           <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
             <Link
               href="/#proyectos"
-              className="inline-flex items-center gap-2 font-mono text-xs text-muted hover:text-white_soft transition-colors mb-8"
+              className="inline-flex items-center gap-2 font-mono text-xs text-muted_light hover:text-white_soft transition-colors mb-8"
             >
               <ArrowLeft size={14} /> Volver a proyectos
             </Link>
@@ -65,6 +65,9 @@ export default async function ProyectoDetailPage({
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
                 <div className="mb-4 flex flex-wrap items-center gap-3">
+                  <span className="glass glass-neutral !rounded-full px-3 py-1 font-mono text-[11px] text-white_soft">
+                    {PROJECT_KIND_LABEL[project.kind]}
+                  </span>
                   <span className="font-mono text-xs text-muted_light">{project.category}</span>
                   {project.status === 'live' && (
                     <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-encina_light">
@@ -81,15 +84,17 @@ export default async function ProyectoDetailPage({
                 </p>
               </div>
 
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="liquid-button inline-flex shrink-0 items-center gap-2 self-start px-7 py-4 font-medium text-white_soft lg:self-auto"
-              >
-                Visitar {displayUrl(project.url)}
-                <ArrowUpRight size={18} />
-              </a>
+              {project.url && (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="liquid-button inline-flex shrink-0 items-center gap-2 self-start px-7 py-4 font-medium text-white_soft lg:self-auto"
+                >
+                  Visitar {displayUrl(project.url)}
+                  <ArrowUpRight size={18} />
+                </a>
+              )}
             </div>
           </div>
         </section>
@@ -98,19 +103,17 @@ export default async function ProyectoDetailPage({
         {cover && (
           <section className="w-full pb-16">
             <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-              <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${project.name}`}>
-                <BrowserFrame url={displayUrl(project.url)} tint={project.tint}>
-                  <Image
-                    src={cover.src}
-                    alt={cover.alt}
-                    width={cover.width}
-                    height={cover.height}
-                    className="h-auto w-full"
-                    priority
-                    sizes="(max-width: 1280px) 100vw, 1280px"
-                  />
-                </BrowserFrame>
-              </a>
+              <BrowserFrame url={displayUrl(project.url) || project.name} tint={project.tint}>
+                <Image
+                  src={cover.src}
+                  alt={cover.alt}
+                  width={cover.width}
+                  height={cover.height}
+                  className="h-auto w-full"
+                  priority
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                />
+              </BrowserFrame>
             </div>
           </section>
         )}

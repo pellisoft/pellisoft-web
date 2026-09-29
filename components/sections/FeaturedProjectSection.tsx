@@ -5,17 +5,34 @@ import Link from 'next/link'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Check } from 'lucide-react'
 import BrowserFrame from '@/components/ui/BrowserFrame'
-import { displayUrl, getProjects, type Project } from '@/lib/projects'
+import { displayUrl, getProjects, type Project, type ProjectKind } from '@/lib/projects'
 import { cn } from '@/lib/utils'
 
-// Sección "Proyectos" de la landing: muestra todos los proyectos de lib/projects.ts
+const GROUPS: { kind: ProjectKind; title: string; description: string }[] = [
+  {
+    kind: 'product',
+    title: 'Productos propios',
+    description: 'Plataformas SaaS que diseñamos, construimos y operamos. Cada una tiene su propia web.',
+  },
+  {
+    kind: 'client',
+    title: 'Proyectos a medida',
+    description: 'Software desarrollado para empresas con necesidades concretas.',
+  },
+]
+
+// Sección "Proyectos" de la landing: muestra todos los proyectos de lib/projects.ts,
+// agrupados en productos propios y proyectos a medida
 export default function FeaturedProjectSection() {
   const shouldReduceMotion = useReducedMotion()
   const projects = getProjects()
   if (projects.length === 0) return null
+  const groups = GROUPS.map((g) => ({ ...g, items: projects.filter((p) => p.kind === g.kind) })).filter(
+    (g) => g.items.length > 0,
+  )
 
   return (
-    <section id="proyectos" className="w-full bg-slate_dark/55 py-20 lg:py-28">
+    <section id="proyectos" className="w-full overflow-hidden bg-slate_dark/55 py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
@@ -33,14 +50,24 @@ export default function FeaturedProjectSection() {
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-20 lg:gap-28">
-          {projects.map((project, i) => (
-            <ProjectShowcase
-              key={project.slug}
-              project={project}
-              reversed={i % 2 === 1}
-              reduceMotion={!!shouldReduceMotion}
-            />
+        <div className="flex flex-col gap-24">
+          {groups.map((group) => (
+            <div key={group.kind}>
+              <div className="mb-12 flex flex-col gap-1 border-l-2 border-tech_purple_light/50 pl-4">
+                <h3 className="font-heading text-xl font-semibold text-white_soft">{group.title}</h3>
+                <p className="font-body text-sm text-muted_light">{group.description}</p>
+              </div>
+              <div className="flex flex-col gap-20 lg:gap-28">
+                {group.items.map((project, i) => (
+                  <ProjectShowcase
+                    key={project.slug}
+                    project={project}
+                    reversed={i % 2 === 1}
+                    reduceMotion={!!shouldReduceMotion}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -87,9 +114,9 @@ function ProjectShowcase({
           )}
         </div>
 
-        <h3 className="font-heading text-3xl lg:text-4xl font-bold text-white_soft">
+        <h4 className="font-heading text-3xl lg:text-4xl font-bold text-white_soft">
           {project.name}
-        </h3>
+        </h4>
         <p className="mt-2 font-heading text-lg text-tech_purple_light">{project.tagline}</p>
 
         <p className="text-muted_light font-body mt-4 leading-relaxed">{project.summary}</p>
@@ -105,21 +132,35 @@ function ProjectShowcase({
           ))}
         </ul>
 
+        {/* Producto propio: la acción principal es ir a su web. Proyecto a medida: ver el caso */}
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href={href} onClick={rememberSection}
-            className="liquid-button inline-flex items-center gap-2 px-6 py-3 font-medium text-white_soft"
-          >
-            Ver proyecto <ArrowRight size={16} />
-          </Link>
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glass glass-neutral glass-interactive !rounded-full inline-flex items-center gap-2 px-6 py-3 font-medium text-white_soft"
-          >
-            {displayUrl(project.url)} <ArrowUpRight size={16} />
-          </a>
+          {project.kind === 'product' && project.url ? (
+            <>
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="liquid-button inline-flex items-center gap-2 px-6 py-3 font-medium text-white_soft"
+              >
+                Visitar {displayUrl(project.url)} <ArrowUpRight size={16} />
+              </a>
+              <Link
+                href={href}
+                onClick={rememberSection}
+                className="glass glass-neutral glass-interactive !rounded-full inline-flex items-center gap-2 px-6 py-3 font-medium text-white_soft"
+              >
+                Ver detalles <ArrowRight size={16} />
+              </Link>
+            </>
+          ) : (
+            <Link
+              href={href}
+              onClick={rememberSection}
+              className="liquid-button inline-flex items-center gap-2 px-6 py-3 font-medium text-white_soft"
+            >
+              Ver caso <ArrowRight size={16} />
+            </Link>
+          )}
         </div>
       </motion.div>
 
@@ -135,7 +176,7 @@ function ProjectShowcase({
       >
         {cover && (
           <Link href={href} onClick={rememberSection} aria-label={`Ver ${project.name}`}>
-            <BrowserFrame url={displayUrl(project.url)} tint={project.tint}>
+            <BrowserFrame url={displayUrl(project.url) || project.name} tint={project.tint}>
               <Image
                 src={cover.src}
                 alt={cover.alt}

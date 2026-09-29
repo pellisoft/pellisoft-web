@@ -17,8 +17,17 @@ export interface ProjectHighlight {
   text: string
 }
 
+export type ProjectKind = 'product' | 'client'
+
+export const PROJECT_KIND_LABEL: Record<ProjectKind, string> = {
+  product: 'Producto propio',
+  client: 'Proyecto a medida',
+}
+
 export interface Project {
   slug: string
+  /** product: SaaS propio con su web · client: trabajo a medida para un cliente */
+  kind: ProjectKind
   name: string
   /** Frase corta que aparece bajo el nombre */
   tagline: string
@@ -26,8 +35,8 @@ export interface Project {
   summary: string
   /** Párrafos de la página de detalle */
   description: string[]
-  /** Web pública del proyecto */
-  url: string
+  /** Web pública del producto o del cliente (opcional en proyectos a medida) */
+  url?: string
   category: string
   tint: GlassTint
   tags: string[]
@@ -56,6 +65,7 @@ const shot = (
 export const PROJECTS: Project[] = [
   {
     slug: 'plrfactu',
+    kind: 'product',
     name: 'PLRFactu',
     tagline: 'TPV inteligente con facturación Verifactu para negocios locales',
     summary:
@@ -115,6 +125,7 @@ export function getProject(slug: string): Project | undefined {
   return PROJECTS.find((p) => p.slug === slug)
 }
 
-export function displayUrl(url: string): string {
+export function displayUrl(url?: string): string {
+  if (!url) return ''
   return url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')
 }

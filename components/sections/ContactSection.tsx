@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Mail, MapPin } from 'lucide-react'
 import { z } from 'zod'
@@ -109,11 +110,15 @@ export default function ContactSection() {
           className="mb-12 text-center"
         >
           <span className="inline-flex w-fit items-center rounded-full border border-tech_blue/30 bg-tech_blue/10 px-4 py-1.5 font-mono text-sm font-bold text-tech_blue_light mb-3">
-            Contacto · Command Center
+            Contacto
           </span>
           <h2 className="font-heading text-4xl font-bold text-white_soft">
             Iniciemos tu proyecto
           </h2>
+          <p className="mt-3 font-body text-lg text-muted_light max-w-xl mx-auto">
+            Cuéntanos qué necesitas. Tu mensaje llega directo a Andorra (Teruel)
+            y te respondemos en menos de 24&nbsp;h.
+          </p>
         </motion.div>
 
         {/* Glassmorphism container */}
@@ -124,48 +129,37 @@ export default function ContactSection() {
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="glass glass-encina mx-auto max-w-5xl rounded-3xl overflow-hidden"
         >
-          <div className="grid grid-cols-1 md:grid-cols-[5fr_7fr]">
+          <div className="grid grid-cols-1 md:grid-cols-[5fr_6fr]">
 
             {/* LEFT — Info + Map */}
-            <div
-              className="p-8 lg:p-10 flex flex-col gap-6"
-              style={{
-                background: 'rgba(10,10,10,0.25)',
-                borderRight: '1px solid rgba(74,124,47,0.2)',
-              }}
-            >
-              {/* Status */}
+            <div className="flex flex-col gap-6 border-b border-white/10 bg-black/20 p-8 md:border-b-0 md:border-r lg:p-10">
+              {/* Estado del buzón */}
               <div className="flex items-center gap-2">
-                <span
-                  className="w-2 h-2 rounded-full bg-encina_light animate-pulse"
-                  aria-hidden
-                />
-                <span className="font-mono text-xs text-encina_light tracking-widest">
-                  SISTEMA ACTIVO
+                <span className="h-2 w-2 rounded-full bg-encina_light animate-pulse" aria-hidden />
+                <span className="font-mono text-xs uppercase tracking-widest text-encina_light">
+                  Buzón abierto
                 </span>
               </div>
 
-              {/* Description */}
-              <p className="font-body text-sm text-muted_light leading-relaxed">
-                Cuéntanos qué necesitas. Respondemos desde Andorra (Teruel) en menos de 24h.
-              </p>
-
-              {/* Map */}
-              <div className="hidden md:flex items-center justify-center py-2">
-                <TeruelMap width={200} height={180} />
+              {/* Mapa: los mensajes llegan a Teruel */}
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-3">
+                <TeruelMap received={formState === 'success'} />
+                <p className="mt-2 text-center font-mono text-[11px] text-muted">
+                  Desde cualquier sitio, directo a Teruel
+                </p>
               </div>
 
-              {/* Contact info */}
-              <div className="flex flex-col gap-3 mt-auto">
+              {/* Datos de contacto */}
+              <div className="mt-auto flex flex-col gap-3">
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="flex items-center gap-2 font-mono text-sm text-muted_light hover:text-white_soft transition-colors"
+                  className="glass glass-blue glass-interactive !rounded-full flex items-center gap-2.5 px-4 py-2.5 font-mono text-sm text-muted_light hover:text-white_soft transition-colors"
                 >
-                  <Mail size={14} className="text-tech_blue_light flex-shrink-0" />
-                  {CONTACT_EMAIL}
+                  <Mail size={15} className="text-tech_blue_light shrink-0" />
+                  <span className="truncate">{CONTACT_EMAIL}</span>
                 </a>
-                <div className="flex items-center gap-2 font-mono text-xs text-muted">
-                  <MapPin size={13} className="text-arcilla flex-shrink-0" />
+                <div className="flex items-center gap-2.5 px-4 font-mono text-xs text-muted">
+                  <MapPin size={14} className="text-arcilla_light shrink-0" />
                   Andorra (Teruel), Aragón, España
                 </div>
               </div>
@@ -173,7 +167,7 @@ export default function ContactSection() {
 
             {/* RIGHT — Form */}
             <div className="p-8 lg:p-10">
-              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
+              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
 
                 {/* Honeypot — visually hidden */}
                 <div
@@ -192,6 +186,7 @@ export default function ContactSection() {
                   />
                 </div>
 
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <TerminalInput
                   label="Nombre"
                   name="name"
@@ -210,6 +205,7 @@ export default function ContactSection() {
                   value={fields.company}
                   onChange={updateField('company')}
                 />
+                </div>
 
                 <TerminalInput
                   label="Email"
@@ -241,6 +237,16 @@ export default function ContactSection() {
                     Si el error persiste, escríbenos a {CONTACT_EMAIL}
                   </p>
                 )}
+
+                {/* Información básica RGPD (art. 13) */}
+                <p className="font-body text-xs leading-relaxed text-muted_light/80">
+                  Usaremos tus datos solo para responder a tu consulta. No los cedemos a terceros.
+                  Puedes ejercer tus derechos escribiéndonos. Más información en la{' '}
+                  <Link href="/privacidad" className="text-tech_blue_light underline underline-offset-2 hover:text-white_soft">
+                    política de privacidad
+                  </Link>
+                  .
+                </p>
               </form>
             </div>
           </div>

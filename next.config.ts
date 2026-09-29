@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: '/proyectos', destination: '/#proyectos', permanent: true },
+      { source: '/servicios', destination: '/#servicios', permanent: true },
+      { source: '/adn', destination: '/#adn', permanent: true },
+      { source: '/contacto', destination: '/#contacto', permanent: true },
     ]
   },
   async headers() {
