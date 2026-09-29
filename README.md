@@ -7,7 +7,7 @@ Web corporativa de Pellisoft — Software industrial y empresarial desde Teruel.
 - **Framework:** Next.js 16 (App Router, TypeScript)
 - **Estilos:** Tailwind CSS v3.4 con design tokens propios
 - **Animaciones:** Framer Motion + GSAP ScrollTrigger
-- **CMS:** Sanity (proyectos dinámicos, ISR)
+- **Contenido:** proyectos estáticos en `lib/projects.ts`
 - **Email:** Resend + React Email
 - **Analítica:** Plausible (privacy-first)
 - **Deploy:** Vercel
@@ -37,11 +37,9 @@ Copia `.env.example` a `.env.local` y rellena los valores:
 
 | Variable | Descripción | Requerida |
 |---|---|---|
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | ID del proyecto Sanity | Para CMS |
-| `NEXT_PUBLIC_SANITY_DATASET` | Dataset de Sanity (default: `production`) | Para CMS |
-| `SANITY_API_TOKEN` | Token de API Sanity (solo producción) | Para escritura CMS |
 | `RESEND_API_KEY` | API key de Resend para envío de emails | Para formulario |
 | `CONTACT_EMAIL_TO` | Email destino para los mensajes del formulario | Para formulario |
+| `CONTACT_EMAIL_FROM` | Remitente (dominio verificado en Resend) | Opcional |
 
 ## Estructura principal
 
@@ -50,7 +48,7 @@ app/                    # Next.js App Router
   layout.tsx            # Layout global (fuentes, metadata, analytics)
   page.tsx              # Home (One Page)
   servicios/            # Página de servicios
-  proyectos/            # Lista y detalle de proyectos (ISR desde Sanity)
+  proyectos/            # Detalle de proyectos (SSG desde lib/projects.ts)
   adn/                  # Página ADN Pellisoft
   contacto/             # Página de contacto
   api/contact/          # API Route para el formulario
@@ -63,24 +61,19 @@ components/
   icons/                # Iconos SVG personalizados
 
 lib/
-  sanity/               # Cliente y queries GROQ para Sanity
+  projects.ts           # Datos de los proyectos
   email/templates/      # Templates de React Email
-
-sanity/
-  schemas/              # Esquemas de Sanity (project.ts)
-  sanity.config.ts      # Configuración del Studio
 
 public/logos/           # Logos en todas las variantes (azul, blanco, verde, etc.)
 ```
 
-## Sanity CMS
+## Proyectos
 
-Para gestionar proyectos y casos de éxito:
+Los proyectos se definen en `lib/projects.ts` y sus capturas en `public/images/projects/<slug>/`.
 
-1. Accede al Studio en [studio.sanity.io](https://studio.sanity.io) con tu cuenta de Pellisoft
-2. Crea y publica proyectos en la sección "Proyecto"
-3. Marca un proyecto como "destacado" para que aparezca en la Home
-4. Los cambios se reflejan en la web en <= 60 segundos (ISR)
+## Seguridad
+
+Ver [docs/security.md](docs/security.md): controles aplicados, cabeceras HTTP, CSP y pendientes.
 
 ## Deploy
 

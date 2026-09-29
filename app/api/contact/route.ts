@@ -1,27 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { SITE_URL } from '@/lib/site'
+
+// Rechaza caracteres de control (CR/LF, NUL...) en campos de una sola línea
+const singleLine = /^[^\p{Cc}]*$/u
 
 const contactSchema = z.object({
-  name:    z.string().min(2).max(100),
-  company: z.string().max(100).optional(),
-  email:   z.string().email(),
-  project: z.string().min(10).max(2000),
-  website: z.string().optional(), // honeypot
+  name:    z.string().trim().min(2).max(100).regex(singleLine),
+  company: z.string().trim().max(100).regex(singleLine).optional(),
+  email:   z.email().max(254),
+  project: z.string().trim().min(10).max(2000),
+  website: z.string().max(200).optional(), // honeypot
 })
 
-// Simple in-memory rate limit store (resets on cold start)
+// Orígenes desde los que se acepta el formulario
+const ALLOWED_ORIGINS = new Set([SITE_URL, `https://www.${new URL(SITE_URL).host}`])
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.has(origin)) return true
+  return process.env.NODE_ENV === 'development' && /^http:\/\/localhost:\d+$/.test(origin)
+}
+
+// Simple in-memory rate limit store (per instance, resets on cold start)
 const rateLimitMap = new Map<string, number>()
 const RATE_LIMIT_MS = 60_000 // 60 seconds
+const RATE_LIMIT_MAX_ENTRIES = 5_000
+
+function getClientIp(request: NextRequest): string {
+  // En Vercel, x-real-ip y x-forwarded-for los fija el edge y el cliente no puede falsearlos.
+  // No usar cf-connecting-ip: Cloudflare solo hace DNS, así que esa cabecera la controla el cliente.
+  const realIp = request.headers.get('x-real-ip')
+  if (realIp) return realIp.trim()
+  const forwarded = request.headers.get('x-forwarded-for')
+  return forwarded ? forwarded.split(',')[0].trim() : 'unknown'
+}
+
+function pruneRateLimit(now: number) {
+  for (const [ip, ts] of rateLimitMap) {
+    if (now - ts >= RATE_LIMIT_MS) rateLimitMap.delete(ip)
+  }
+  // Tope de seguridad por si llegan muchas IPs distintas dentro de la ventana
+  if (rateLimitMap.size > RATE_LIMIT_MAX_ENTRIES) rateLimitMap.clear()
+}
 
 export async function POST(request: NextRequest) {
   try {
+    // Solo peticiones desde nuestra propia web (evita envíos cross-site)
+    const origin = request.headers.get('origin')
+    if (!isAllowedOrigin(origin)) {
+      return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 })
+    }
+
+    // Exigir JSON: un <form> cross-site solo puede enviar text/plain, urlencoded o multipart
+    const contentType = request.headers.get('content-type') ?? ''
+    if (!contentType.toLowerCase().startsWith('application/json')) {
+      return NextResponse.json({ error: 'Tipo de contenido no soportado' }, { status: 415 })
+    }
+
     // Rate limiting
-    // Behind Cloudflare the real client IP comes in cf-connecting-ip
-    const forwarded = request.headers.get('x-forwarded-for')
-    const ip =
-      request.headers.get('cf-connecting-ip') ??
-      (forwarded ? forwarded.split(',')[0].trim() : 'unknown')
+    const ip = getClientIp(request)
     const now = Date.now()
+    pruneRateLimit(now)
     const lastSubmit = rateLimitMap.get(ip)
     if (lastSubmit && now - lastSubmit < RATE_LIMIT_MS) {
       return NextResponse.json(
@@ -30,7 +70,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
+    }
 
     // Validate with Zod
     const parsed = contactSchema.safeParse(body)
@@ -103,4 +148,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
   }
 }
-

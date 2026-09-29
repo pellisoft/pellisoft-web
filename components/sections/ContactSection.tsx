@@ -12,7 +12,7 @@ import { CONTACT_EMAIL } from '@/lib/site'
 const contactSchema = z.object({
   name: z.string().min(2, 'Nombre demasiado corto').max(100),
   company: z.string().max(100).optional(),
-  email: z.string().email('Email no válido'),
+  email: z.email('Email no válido').max(254),
   project: z.string().min(10, 'Cuéntanos un poco más (mín. 10 caracteres)').max(2000),
 })
 
