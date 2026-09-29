@@ -25,7 +25,7 @@ export default function FeaturedProjectSection() {
           className="mb-14"
         >
           <span className="inline-flex w-fit items-center rounded-full border border-tech_blue/30 bg-tech_blue/10 px-4 py-1.5 font-mono text-sm font-bold text-tech_blue_light mb-3">
-            Casos reales
+            Lo que construimos
           </span>
           <h2 className="font-heading text-4xl font-bold text-white_soft">Proyectos</h2>
           <p className="mt-3 font-body text-lg text-muted_light max-w-xl">

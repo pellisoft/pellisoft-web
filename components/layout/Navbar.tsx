@@ -48,7 +48,7 @@ export default function Navbar() {
             : 'bg-transparent'
         )}
       >
-        <nav className="flex h-20 lg:h-24 w-full items-center justify-between px-8 md:px-14 lg:px-20 xl:px-28">
+        <nav className="flex h-20 lg:h-24 w-full items-center justify-between px-6 md:px-12 lg:px-12 xl:px-28">
           {/* Logo — click scrolls to top */}
           <button
             onClick={() => { setMobileOpen(false); window.scrollTo({ top: 0, behavior: shouldReduceMotion ? 'auto' : 'smooth' }) }}
@@ -60,21 +60,21 @@ export default function Navbar() {
               alt="Pellisoft"
               width={80}
               height={80}
-              className="h-16 w-16 lg:h-20 lg:w-20 object-contain"
+              className="h-14 w-14 md:h-16 md:w-16 xl:h-20 xl:w-20 object-contain"
               priority
             />
-            <span className="hidden md:block font-heading font-bold text-white_soft text-xl lg:text-2xl tracking-wide">
+            <span className="hidden sm:block font-heading font-bold text-white_soft text-xl xl:text-2xl tracking-wide">
               Pellisoft
             </span>
           </button>
 
           {/* Desktop links */}
-          <ul className="hidden md:flex items-center gap-8 lg:gap-12" role="list">
+          <ul className="hidden lg:flex items-center gap-8 xl:gap-12" role="list">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <button
                   onClick={() => handleNavClick(link.href)}
-                  className="text-base lg:text-lg font-medium text-muted_light hover:text-white_soft transition-colors duration-150 cursor-pointer"
+                  className="whitespace-nowrap text-base xl:text-lg font-medium text-muted_light hover:text-white_soft transition-colors duration-150 cursor-pointer"
                 >
                   {link.label}
                 </button>
@@ -83,10 +83,10 @@ export default function Navbar() {
           </ul>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
             <button
               onClick={() => handleNavClick('#contacto')}
-              className="liquid-button inline-flex items-center gap-2 px-6 py-3 text-base font-medium text-white_soft hover:scale-[1.02]"
+              className="liquid-button inline-flex items-center gap-2 whitespace-nowrap px-6 py-3 text-base font-medium text-white_soft hover:scale-[1.02]"
             >
               Hablar con Pellisoft
               <ArrowRight size={18} />
@@ -95,7 +95,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="flex md:hidden items-center justify-center text-white_soft"
+            className="flex lg:hidden items-center justify-center text-white_soft"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
@@ -114,7 +114,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-black/50 md:hidden"
+              className="fixed inset-0 z-40 bg-black/50 lg:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -123,7 +123,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: 280 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="glass glass-thin glass-encina !rounded-none fixed top-0 right-0 bottom-0 z-50 w-[280px] md:hidden"
+              className="glass glass-thin glass-encina !rounded-none fixed top-0 right-0 bottom-0 z-50 w-[280px] lg:hidden"
             >
               <div className="flex flex-col gap-6 px-8 pt-24 pb-8">
                 {NAV_LINKS.map((link) => (
