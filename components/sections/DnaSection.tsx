@@ -54,7 +54,7 @@ export default function DnaSection() {
     <section
       id="adn"
       ref={sectionRef}
-      className="w-full bg-carbon py-32 overflow-hidden relative"
+      className="w-full bg-carbon/40 py-32 overflow-hidden relative"
     >
       {/* Background parallax logo */}
       <div

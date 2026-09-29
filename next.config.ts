@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Todo el contenido vive en la landing; las antiguas páginas llevan a su sección
+  async redirects() {
+    return [
+      { source: '/proyectos', destination: '/#proyectos', permanent: true },
+    ]
+  },
   async headers() {
     return [
       {

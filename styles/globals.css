@@ -56,3 +56,186 @@ body {
   margin-left: 1px;
   font-weight: 300;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   LIQUID GLASS — sistema de cristal sobre la paleta Pellisoft
+   ───────────────────────────────────────────────────────────── */
+
+/* Tintes por color de marca (RGB para poder aplicar alfa) */
+:root {
+  --glass-tint: 59 130 246;          /* tech_blue_light */
+  --glass-blur: 22px;
+}
+.glass-blue    { --glass-tint: 59 130 246; }
+.glass-purple  { --glass-tint: 168 85 247; }
+.glass-encina  { --glass-tint: 74 124 47; }
+.glass-arcilla { --glass-tint: 224 85 32; }
+.glass-neutral { --glass-tint: 245 245 245; }
+
+/* Fondo ambiental: manchas difusas que el cristal refracta */
+.liquid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: #0A0A0A;
+}
+.liquid-bg::before,
+.liquid-bg::after,
+.liquid-bg > span {
+  content: '';
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.7;
+  will-change: transform;
+}
+.liquid-bg::before {
+  width: 46vw; height: 46vw; top: -12vw; right: -8vw;
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.55), transparent 70%);
+  animation: liquid-drift-a 28s ease-in-out infinite alternate;
+}
+.liquid-bg::after {
+  width: 40vw; height: 40vw; bottom: -14vw; left: -10vw;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.45), transparent 70%);
+  animation: liquid-drift-b 34s ease-in-out infinite alternate;
+}
+.liquid-bg > span:nth-child(1) {
+  width: 32vw; height: 32vw; top: 38%; left: 30%;
+  background: radial-gradient(circle, rgba(45, 80, 22, 0.5), transparent 70%);
+  animation: liquid-drift-b 40s ease-in-out infinite alternate-reverse;
+}
+.liquid-bg > span:nth-child(2) {
+  width: 22vw; height: 22vw; top: 62%; right: 6%;
+  background: radial-gradient(circle, rgba(193, 68, 14, 0.35), transparent 70%);
+  animation: liquid-drift-a 30s ease-in-out infinite alternate-reverse;
+}
+/* Grano fino para evitar banding en los gradientes */
+.liquid-bg > span:nth-child(3) {
+  inset: 0; width: auto; height: auto; border-radius: 0; filter: none; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: none;
+}
+
+@keyframes liquid-drift-a {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-8vw, 10vh, 0) scale(1.15); }
+}
+@keyframes liquid-drift-b {
+  0%   { transform: translate3d(0, 0, 0) scale(1.1); }
+  100% { transform: translate3d(10vw, -8vh, 0) scale(0.95); }
+}
+
+/* En @layer components para que las utilidades (fixed, absolute…) puedan sobrescribir */
+@layer components {
+  /* Superficie de cristal líquido */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    background:
+      linear-gradient(135deg,
+        rgb(var(--glass-tint) / 0.10) 0%,
+        rgba(17, 19, 24, 0.45) 45%,
+        rgb(var(--glass-tint) / 0.05) 100%);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(170%);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),          /* reflejo superior */
+      inset 0 -1px 0 rgb(var(--glass-tint) / 0.10),   /* rebote inferior */
+      0 10px 40px -12px rgb(0 0 0 / 0.6),
+      0 0 0 0 rgb(var(--glass-tint) / 0);
+    transition: box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+  }
+  /* Borde especular con degradado (brillo tipo lente) */
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(145deg,
+      rgb(255 255 255 / 0.28) 0%,
+      rgb(var(--glass-tint) / 0.35) 30%,
+      transparent 55%,
+      rgb(var(--glass-tint) / 0.25) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Brillo difuso superior (menisco del líquido) */
+  .glass::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 45%;
+    border-radius: inherit;
+    background: radial-gradient(120% 90% at 20% 0%, rgb(255 255 255 / 0.07), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glass > * { position: relative; z-index: 2; }
+
+  .glass-interactive:hover {
+    border-color: rgb(var(--glass-tint) / 0.35);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.18),
+      inset 0 -1px 0 rgb(var(--glass-tint) / 0.2),
+      0 18px 50px -14px rgb(0 0 0 / 0.7),
+      0 0 36px -4px rgb(var(--glass-tint) / 0.35);
+  }
+
+  /* Variante fina (navbar, chips, paneles) */
+  .glass-thin {
+    --glass-blur: 16px;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.78), rgba(10, 10, 10, 0.62));
+  }
+
+  /* Botón píldora líquida con color de marca */
+  .liquid-button {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.9), rgba(124, 58, 237, 0.9));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      inset 0 -2px 6px rgb(0 0 0 / 0.25),
+      0 8px 28px -8px rgba(124, 58, 237, 0.6);
+    transition: box-shadow 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+  }
+  .liquid-button::before {
+    content: '';
+    position: absolute;
+    inset: 1px 8% auto 8%;
+    height: 50%;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.35), rgb(255 255 255 / 0));
+    pointer-events: none;
+    z-index: -1;
+  }
+  .liquid-button:hover {
+    filter: brightness(1.1);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.45),
+      inset 0 -2px 6px rgb(0 0 0 / 0.25),
+      0 12px 36px -8px rgba(124, 58, 237, 0.8);
+  }
+}
+
+/* Fallback sin backdrop-filter: cristal opaco legible */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(17, 19, 24, 0.92); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-bg::before,
+  .liquid-bg::after,
+  .liquid-bg > span { animation: none !important; }
+}
+
+/* Las secciones con ancla quedan por debajo de la navbar fija */
+section[id] { scroll-margin-top: 5rem; }

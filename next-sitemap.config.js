@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://pellisoft.es',
+  siteUrl: 'https://pellisoft.com',
   generateRobotsTxt: false, // We manage robots.txt manually
   changefreq: 'monthly',
   priority: 0.7,

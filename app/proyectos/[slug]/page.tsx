@@ -2,43 +2,18 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ArrowLeft, ArrowUpRight, Check } from 'lucide-react'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import { ArrowLeft } from 'lucide-react'
+import BrowserFrame from '@/components/ui/BrowserFrame'
+import ProjectGallery from '@/components/ui/ProjectGallery'
+import { displayUrl, getProject, getProjects } from '@/lib/projects'
+import { SITE_URL } from '@/lib/site'
 
-export const revalidate = 60
+export const dynamicParams = false
 
-interface SanityProject {
-  _id: string
-  title: string
-  slug: string
-  description: string
-  imageUrl?: string
-  tags?: string[]
-  metrics?: { label: string; value: string }[]
-}
-
-async function getProject(slug: string): Promise<SanityProject | null> {
-  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) return null
-  try {
-    const { client } = await import('@/lib/sanity/client')
-    const { projectBySlugQuery } = await import('@/lib/sanity/queries')
-    return await client.fetch<SanityProject | null>(projectBySlugQuery, { slug })
-  } catch {
-    return null
-  }
-}
-
-export async function generateStaticParams() {
-  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) return []
-  try {
-    const { client } = await import('@/lib/sanity/client')
-    const { projectSlugsQuery } = await import('@/lib/sanity/queries')
-    const slugs = await client.fetch<{ slug: string }[]>(projectSlugsQuery)
-    return slugs.filter((s) => s.slug).map((s) => ({ slug: s.slug }))
-  } catch {
-    return []
-  }
+export function generateStaticParams() {
+  return getProjects().map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({
@@ -47,11 +22,18 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const project = await getProject(slug)
+  const project = getProject(slug)
   if (!project) return { title: 'Proyecto — Pellisoft' }
+  const cover = project.screenshots[0]
   return {
-    title: `${project.title} — Pellisoft`,
-    description: project.description,
+    title: `${project.name} — Proyectos Pellisoft`,
+    description: project.summary,
+    alternates: { canonical: `${SITE_URL}/proyectos/${project.slug}` },
+    openGraph: {
+      title: `${project.name} — Pellisoft`,
+      description: project.summary,
+      images: cover ? [{ url: cover.src, width: cover.width, height: cover.height }] : undefined,
+    },
   }
 }
 
@@ -61,99 +43,135 @@ export default async function ProyectoDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const project = await getProject(slug)
+  const project = getProject(slug)
   if (!project) notFound()
+
+  const cover = project.screenshots[0]
 
   return (
     <>
       <Navbar />
       <main>
         {/* Header */}
-        <section className="w-full bg-carbon pt-32 pb-16 border-b border-tech_blue/10">
+        <section className="w-full bg-carbon/40 pt-32 pb-12">
           <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
             <Link
-              href="/proyectos"
+              href="/#proyectos"
               className="inline-flex items-center gap-2 font-mono text-xs text-muted hover:text-white_soft transition-colors mb-8"
             >
               <ArrowLeft size={14} /> Volver a proyectos
             </Link>
 
-            {project.tags && project.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="font-mono text-xs px-2 py-0.5 rounded-full border border-tech_blue/30 bg-tech_blue/10 text-tech_blue_light"
-                  >
-                    {tag}
-                  </span>
-                ))}
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <div className="mb-4 flex flex-wrap items-center gap-3">
+                  <span className="font-mono text-xs text-muted_light">{project.category}</span>
+                  {project.status === 'live' && (
+                    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-encina_light">
+                      <span className="h-1.5 w-1.5 rounded-full bg-encina_light animate-pulse" aria-hidden />
+                      EN PRODUCCIÓN
+                    </span>
+                  )}
+                </div>
+                <h1 className="font-heading text-5xl lg:text-6xl font-bold text-white_soft leading-tight">
+                  {project.name}
+                </h1>
+                <p className="mt-4 font-body text-xl text-muted_light leading-relaxed">
+                  {project.tagline}
+                </p>
               </div>
-            )}
 
-            <h1 className="font-heading text-4xl lg:text-5xl font-bold text-white_soft leading-tight">
-              {project.title}
-            </h1>
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="liquid-button inline-flex shrink-0 items-center gap-2 self-start px-7 py-4 font-medium text-white_soft lg:self-auto"
+              >
+                Visitar {displayUrl(project.url)}
+                <ArrowUpRight size={18} />
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* Image */}
-        {project.imageUrl && (
-          <section className="w-full bg-slate_dark">
-            <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20 py-8">
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-tech_blue/20">
-                <Image
-                  src={project.imageUrl}
-                  alt={project.title}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1280px) 100vw, 1280px"
-                />
-              </div>
+        {/* Cover */}
+        {cover && (
+          <section className="w-full pb-16">
+            <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+              <a href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Abrir ${project.name}`}>
+                <BrowserFrame url={displayUrl(project.url)} tint={project.tint}>
+                  <Image
+                    src={cover.src}
+                    alt={cover.alt}
+                    width={cover.width}
+                    height={cover.height}
+                    className="h-auto w-full"
+                    priority
+                    sizes="(max-width: 1280px) 100vw, 1280px"
+                  />
+                </BrowserFrame>
+              </a>
             </div>
           </section>
         )}
 
         {/* Content */}
-        <section className="w-full bg-carbon py-16">
+        <section className="w-full bg-slate_dark/55 py-16 lg:py-20">
           <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-              {/* Description */}
-              <div className="lg:col-span-2">
-                <h2 className="font-heading text-2xl font-bold text-white_soft mb-6">
-                  El proyecto
-                </h2>
-                <p className="font-body text-muted_light leading-relaxed text-lg">
-                  {project.description}
-                </p>
-              </div>
-
-              {/* Metrics */}
-              {project.metrics && project.metrics.length > 0 && (
-                <div className="flex flex-col gap-4">
-                  <h3 className="font-mono text-xs text-tech_blue_light tracking-widest uppercase">
-                    KPIs del proyecto
-                  </h3>
-                  {project.metrics.map((m) => (
-                    <div
-                      key={m.label}
-                      className="bg-slate_dark rounded-lg px-5 py-4 border border-tech_blue/20"
-                    >
-                      <p className="font-heading text-3xl font-bold text-tech_blue_light">
-                        {m.value}
-                      </p>
-                      <p className="font-mono text-xs text-muted mt-1">{m.label}</p>
-                    </div>
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-[3fr_2fr]">
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-white_soft mb-6">El proyecto</h2>
+                <div className="flex flex-col gap-5">
+                  {project.description.map((p, i) => (
+                    <p key={i} className="font-body text-lg text-muted_light leading-relaxed">
+                      {p}
+                    </p>
                   ))}
                 </div>
-              )}
+                <div className="mt-8 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="glass glass-neutral !rounded-full px-3 py-1 font-mono text-xs text-muted_light"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className={`glass glass-${project.tint} h-fit rounded-2xl p-7`}>
+                <h3 className="font-mono text-xs tracking-widest uppercase text-muted_light mb-5">
+                  Qué incluye
+                </h3>
+                <ul className="flex flex-col gap-5">
+                  {project.highlights.map((h) => (
+                    <li key={h.title} className="flex gap-3">
+                      <Check size={18} className="mt-0.5 shrink-0 text-encina_light" />
+                      <div>
+                        <p className="font-heading font-semibold text-white_soft">{h.title}</p>
+                        <p className="mt-1 font-body text-sm text-muted_light leading-relaxed">{h.text}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* Gallery */}
+        {project.screenshots.length > 1 && (
+          <section className="w-full bg-carbon/40 py-16 lg:py-20">
+            <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
+              <h2 className="font-heading text-2xl font-bold text-white_soft mb-8">Capturas</h2>
+              <ProjectGallery screenshots={project.screenshots} tint={project.tint} />
+            </div>
+          </section>
+        )}
+
         {/* CTA */}
-        <section className="w-full bg-slate_dark py-20">
+        <section className="w-full bg-slate_dark/55 py-20">
           <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20 text-center">
             <span className="inline-flex w-fit items-center rounded-full border border-encina/30 bg-encina/10 px-4 py-1.5 font-mono text-sm font-bold text-encina_light mb-4">
               ¿Te interesa algo así?
@@ -165,8 +183,8 @@ export default async function ProyectoDetailPage({
               Respondemos desde Andorra (Teruel) en menos de 24 horas.
             </p>
             <Link
-              href="/contacto"
-              className="inline-flex items-center gap-2 rounded-md bg-arcilla hover:bg-arcilla_light px-8 py-4 font-medium text-white_soft transition-colors duration-200"
+              href="/#contacto"
+              className="liquid-button inline-flex items-center gap-2 px-8 py-4 font-medium text-white_soft"
             >
               Hablar con Pellisoft →
             </Link>

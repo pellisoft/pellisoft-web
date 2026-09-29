@@ -10,7 +10,7 @@ interface AnimatedTextProps {
   className?: string
 }
 
-const DEFAULT_WORDS = ['Sistemas MES', 'Facturación SaaS', 'TPV Inteligente', 'Automatización']
+const DEFAULT_WORDS = ['Software a medida', 'Automatización industrial', 'Sistemas MES', 'Plataformas SaaS', 'Integraciones']
 
 export default function AnimatedText({
   words = DEFAULT_WORDS,

@@ -6,10 +6,12 @@ import FeaturedProjectSection from '@/components/sections/FeaturedProjectSection
 import DnaSection from '@/components/sections/DnaSection'
 import ContactSection from '@/components/sections/ContactSection'
 import Footer from '@/components/layout/Footer'
+import HashScroller from '@/components/layout/HashScroller'
 
 export default function HomePage() {
   return (
     <>
+      <HashScroller />
       <Navbar />
       <main>
         <HeroSection />

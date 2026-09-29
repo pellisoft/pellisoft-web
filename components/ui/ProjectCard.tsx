@@ -3,102 +3,86 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ExternalLink } from 'lucide-react'
+import { displayUrl, type Project } from '@/lib/projects'
+import { cn } from '@/lib/utils'
 
-interface ProjectCardProps {
-  title: string
-  slug: string
-  description: string
-  imageUrl?: string
-  tags?: string[]
-  metrics?: { label: string; value: string }[]
+const tagTint = {
+  blue: 'border-tech_blue/30 bg-tech_blue/10 text-tech_blue_light',
+  purple: 'border-tech_purple/30 bg-tech_purple/10 text-tech_purple_light',
+  encina: 'border-encina/30 bg-encina/10 text-encina_light',
+  arcilla: 'border-arcilla/30 bg-arcilla/10 text-arcilla_light',
+  neutral: 'border-white/15 bg-white/5 text-muted_light',
 }
 
-export default function ProjectCard({
-  title,
-  slug,
-  description,
-  imageUrl,
-  tags,
-  metrics,
-}: ProjectCardProps) {
+export default function ProjectCard({ project }: { project: Project }) {
+  const cover = project.screenshots[0]
+
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="group relative flex flex-col rounded-xl bg-slate_dark border border-tech_blue/20 hover:border-tech_blue/50 transition-colors duration-300 overflow-hidden"
+      className={cn('glass glass-interactive group flex flex-col rounded-2xl overflow-hidden', `glass-${project.tint}`)}
     >
-      {/* Image or placeholder */}
-      {imageUrl ? (
-        <div className="relative w-full aspect-video overflow-hidden">
-          <Image
-            src={imageUrl}
-            alt={title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+      <Link href={`/proyectos/${project.slug}`} className="block p-2 pb-0" aria-label={`Ver ${project.name}`}>
+        <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-white/5">
+          {cover ? (
+            <Image
+              src={cover.src}
+              alt={cover.alt}
+              fill
+              className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-br from-tech_blue/20 to-tech_purple/10" />
+          )}
         </div>
-      ) : (
-        <div
-          className="w-full aspect-video"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(30,64,175,0.15) 0%, rgba(124,58,237,0.1) 100%)',
-          }}
-        />
-      )}
+      </Link>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-6 gap-4">
-        {/* Tags */}
-        {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="font-mono text-xs px-2 py-0.5 rounded-full border border-tech_blue/30 bg-tech_blue/10 text-tech_blue_light"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+      <div className="flex flex-1 flex-col gap-4 p-6">
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-mono text-xs text-muted_light">{project.category}</span>
+          {project.status === 'live' && (
+            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-encina_light">
+              <span className="h-1.5 w-1.5 rounded-full bg-encina_light animate-pulse" aria-hidden />
+              EN PRODUCCIÓN
+            </span>
+          )}
+        </div>
 
-        <h3 className="font-heading text-xl font-bold text-white_soft">
-          {title}
-        </h3>
+        <div>
+          <h3 className="font-heading text-2xl font-bold text-white_soft">{project.name}</h3>
+          <p className="mt-2 font-body text-sm leading-relaxed text-muted_light">{project.summary}</p>
+        </div>
 
-        {description && (
-          <p className="font-body text-sm text-muted_light leading-relaxed flex-1">
-            {description}
-          </p>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {project.tags.slice(0, 4).map((tag) => (
+            <span key={tag} className={cn('rounded-full border px-2 py-0.5 font-mono text-xs', tagTint[project.tint])}>
+              {tag}
+            </span>
+          ))}
+        </div>
 
-        {/* Metrics */}
-        {metrics && metrics.length > 0 && (
-          <div className="grid grid-cols-3 gap-3 pt-3 border-t border-tech_blue/15">
-            {metrics.slice(0, 3).map((m) => (
-              <div key={m.label} className="text-center">
-                <p className="font-heading text-xl font-bold text-tech_blue_light">
-                  {m.value}
-                </p>
-                <p className="font-mono text-xs text-muted mt-0.5">{m.label}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* CTA */}
-        <Link
-          href={`/proyectos/${slug}`}
-          className="inline-flex items-center gap-2 font-mono text-sm text-tech_blue_light hover:text-white_soft transition-colors mt-auto pt-2"
-        >
-          Ver proyecto <ArrowRight size={14} />
-        </Link>
+        <div className="mt-auto flex items-center justify-between gap-4 pt-2">
+          <Link
+            href={`/proyectos/${project.slug}`}
+            className="inline-flex items-center gap-2 font-mono text-sm text-white_soft hover:text-tech_blue_light transition-colors"
+          >
+            Ver proyecto <ArrowRight size={14} />
+          </Link>
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-muted_light hover:text-white_soft transition-colors"
+          >
+            {displayUrl(project.url)} <ExternalLink size={12} />
+          </a>
+        </div>
       </div>
-    </motion.div>
+    </motion.article>
   )
 }

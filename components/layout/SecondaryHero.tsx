@@ -10,7 +10,7 @@ interface SecondaryHeroProps {
 
 export default function SecondaryHero({ eyebrow, title, description }: SecondaryHeroProps) {
   return (
-    <section className="w-full bg-carbon pt-32 pb-16 border-b border-tech_blue/10">
+    <section className="w-full bg-carbon/40 pt-32 pb-16 border-b border-tech_blue/10">
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

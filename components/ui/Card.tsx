@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -16,30 +15,10 @@ interface ServiceCardProps {
 }
 
 const glowConfig = {
-  blue: {
-    border: 'border-tech_blue/25',
-    hoverBorder: 'hover:border-tech_blue/60',
-    shadow: '0 0 28px rgba(30,64,175,0.25)',
-    bg: 'rgba(30,64,175,0.04)',
-  },
-  purple: {
-    border: 'border-tech_purple/25',
-    hoverBorder: 'hover:border-tech_purple/60',
-    shadow: '0 0 28px rgba(124,58,237,0.25)',
-    bg: 'rgba(124,58,237,0.04)',
-  },
-  arcilla: {
-    border: 'border-arcilla/25',
-    hoverBorder: 'hover:border-arcilla/60',
-    shadow: '0 0 28px rgba(193,68,14,0.25)',
-    bg: 'rgba(193,68,14,0.04)',
-  },
-  encina: {
-    border: 'border-encina/25',
-    hoverBorder: 'hover:border-encina/60',
-    shadow: '0 0 28px rgba(45,80,22,0.25)',
-    bg: 'rgba(45,80,22,0.04)',
-  },
+  blue: { tint: 'glass-blue' },
+  purple: { tint: 'glass-purple' },
+  arcilla: { tint: 'glass-arcilla' },
+  encina: { tint: 'glass-encina' },
 }
 
 const badgeColorMap = {
@@ -59,37 +38,21 @@ export default function ServiceCard({
   className,
   children,
 }: ServiceCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
   const config = glowConfig[glowColor]
 
   return (
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      style={{
-        boxShadow: isHovered ? config.shadow : 'none',
-        backgroundColor: '#111318',
-        transition: 'box-shadow 0.2s ease',
-      }}
       className={cn(
-        'relative flex flex-col rounded-2xl border p-7 cursor-pointer overflow-hidden',
-        config.border,
-        config.hoverBorder,
-        'transition-colors duration-200',
-        size === 'lg' ? 'min-h-[280px]' : 'min-h-[180px]',
+        'glass glass-interactive relative flex flex-col rounded-2xl p-7 overflow-hidden',
+        config.tint,
+        size === 'lg' ? 'min-h-[280px]' : 'min-h-[200px]',
         className
       )}
     >
-      {/* Subtle gradient background overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{ background: config.bg }}
-      />
-
       {/* Content */}
-      <div className="relative z-10 flex flex-col h-full gap-4">
+      <div className="flex flex-col h-full gap-4">
         {/* Icon */}
         <div className="text-muted_light group-hover:text-white_soft transition-colors">
           {icon}
@@ -124,13 +87,6 @@ export default function ServiceCard({
 
         {/* Children */}
         {children}
-
-        {/* Arrow */}
-        <div className="flex justify-end mt-auto pt-2">
-          <span className="text-muted_light text-lg transition-transform duration-200 group-hover:translate-x-1">
-            →
-          </span>
-        </div>
       </div>
     </motion.div>
   )

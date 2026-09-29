@@ -10,6 +10,7 @@ import {
   Section,
   Text,
 } from '@react-email/components'
+import { SITE_DOMAIN } from '@/lib/site'
 
 interface ContactEmailProps {
   name: string
@@ -29,7 +30,7 @@ export function ContactEmailTemplate({
   return (
     <Html lang="es">
       <Head />
-      <Preview>Nuevo mensaje de {name} vía pellisoft.es</Preview>
+      <Preview>Nuevo mensaje de {name} vía {SITE_DOMAIN}</Preview>
       <Body
         style={{
           fontFamily: 'Inter, -apple-system, sans-serif',
@@ -156,7 +157,7 @@ export function ContactEmailTemplate({
                 fontFamily: 'monospace',
               }}
             >
-              Enviado desde pellisoft.es · {sentAt}
+              Enviado desde {SITE_DOMAIN} · {sentAt}
             </Text>
           </Section>
         </Container>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google'
 import Script from 'next/script'
 import '@/styles/globals.css'
+import { SITE_URL, SITE_DOMAIN, CONTACT_EMAIL } from '@/lib/site'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -25,8 +26,9 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Pellisoft — Software industrial y empresarial',
-  description: 'Sistemas MES, SaaS y automatización desde Andorra (Teruel) para el mundo.',
+  description: 'Software a medida, automatización industrial y plataformas SaaS desde Andorra (Teruel) para el mundo.',
   icons: {
     icon: [{ url: '/icon.png', type: 'image/png' }],
     apple: [{ url: '/icon.png', type: 'image/png' }],
@@ -34,8 +36,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Pellisoft — Software industrial y empresarial',
-    description: 'Sistemas MES, SaaS y automatización desde Andorra (Teruel) para el mundo.',
-    url: 'https://pellisoft.es',
+    description: 'Software a medida, automatización industrial y plataformas SaaS desde Andorra (Teruel) para el mundo.',
+    url: SITE_URL,
     siteName: 'Pellisoft',
     locale: 'es_ES',
     type: 'website',
@@ -47,8 +49,8 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'Pellisoft',
   description: 'Software industrial y empresarial diseñado para escalar',
-  url: 'https://pellisoft.es',
-  email: 'info@pellisoft.es',
+  url: SITE_URL,
+  email: CONTACT_EMAIL,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Andorra (Teruel)',
@@ -66,9 +68,16 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      data-scroll-behavior="smooth"
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-body bg-carbon text-white_soft antialiased">
+        {/* Fondo ambiental para el efecto liquid glass */}
+        <div className="liquid-bg" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         {children}
         {/* JSON-LD structured data */}
         <Script
@@ -79,7 +88,7 @@ export default function RootLayout({
         {/* Plausible Analytics — privacy-first, no cookie banner needed */}
         <Script
           defer
-          data-domain="pellisoft.es"
+          data-domain={SITE_DOMAIN}
           src="https://plausible.io/js/script.js"
           strategy="afterInteractive"
         />

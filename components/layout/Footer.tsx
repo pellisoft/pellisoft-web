@@ -6,7 +6,7 @@ const NAV_ITEMS = ['Servicios', 'Proyectos', 'ADN', 'Contacto'] as const
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-slate_dark border-t border-tech_blue/15">
+    <footer className="w-full bg-slate_dark/55 border-t border-tech_blue/15">
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
 
@@ -28,7 +28,7 @@ export default function Footer() {
               {NAV_ITEMS.map((item) => (
                 <li key={item}>
                   <a
-                    href={`#${item.toLowerCase()}`}
+                    href={`/#${item.toLowerCase()}`}
                     className="font-body text-sm text-muted hover:text-white_soft transition-colors duration-200"
                   >
                     {item}

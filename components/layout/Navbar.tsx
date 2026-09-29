@@ -29,7 +29,12 @@ export default function Navbar() {
     setMobileOpen(false)
     if (href.startsWith('#')) {
       const el = document.getElementById(href.slice(1))
-      el?.scrollIntoView({ behavior: shouldReduceMotion ? 'auto' : 'smooth' })
+      if (el) {
+        el.scrollIntoView({ behavior: shouldReduceMotion ? 'auto' : 'smooth' })
+      } else {
+        // Section lives on the home page — navigate there
+        window.location.assign(`/${href}`)
+      }
     }
   }
 
@@ -39,7 +44,7 @@ export default function Navbar() {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           scrolled
-            ? 'bg-black/85 backdrop-blur-[14px] border-b border-tech_blue/20'
+            ? 'glass glass-thin glass-blue !rounded-none !border-x-0 !border-t-0'
             : 'bg-transparent'
         )}
       >
@@ -81,7 +86,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center">
             <button
               onClick={() => handleNavClick('#contacto')}
-              className="inline-flex items-center gap-2 rounded-md bg-gradient-tech px-6 py-3 text-base font-medium text-white_soft transition-all duration-200 hover:brightness-110 hover:scale-[1.02]"
+              className="liquid-button inline-flex items-center gap-2 px-6 py-3 text-base font-medium text-white_soft hover:scale-[1.02]"
             >
               Hablar con Pellisoft
               <ArrowRight size={18} />
@@ -118,7 +123,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: 280 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[280px] bg-black/95 backdrop-blur-xl border-l border-encina/30 md:hidden"
+              className="glass glass-thin glass-encina !rounded-none fixed top-0 right-0 bottom-0 z-50 w-[280px] md:hidden"
             >
               <div className="flex flex-col gap-6 px-8 pt-24 pb-8">
                 {NAV_LINKS.map((link) => (
@@ -132,7 +137,7 @@ export default function Navbar() {
                 ))}
                 <button
                   onClick={() => handleNavClick('#contacto')}
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-md bg-gradient-tech px-5 py-3 text-sm font-medium text-white_soft"
+                  className="liquid-button mt-4 inline-flex w-full items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white_soft"
                 >
                   Hablar con Pellisoft
                   <ArrowRight size={16} />

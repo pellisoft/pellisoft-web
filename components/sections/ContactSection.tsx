@@ -7,6 +7,7 @@ import { z } from 'zod'
 import TerminalInput from '@/components/ui/TerminalInput'
 import SubmitButton from '@/components/ui/SubmitButton'
 import TeruelMap from '@/components/ui/TeruelMap'
+import { CONTACT_EMAIL } from '@/lib/site'
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Nombre demasiado corto').max(100),
@@ -96,7 +97,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contacto" className="w-full bg-carbon py-20 lg:py-28">
+    <section id="contacto" className="w-full bg-carbon/40 py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20">
 
         {/* Section header */}
@@ -121,14 +122,7 @@ export default function ContactSection() {
           whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="mx-auto max-w-5xl rounded-2xl overflow-hidden"
-          style={{
-            background: 'rgba(17, 19, 24, 0.85)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(74, 124, 47, 0.4)',
-            boxShadow:
-              '0 0 60px rgba(45, 80, 22, 0.15), inset 0 1px 0 rgba(74,124,47,0.1)',
-          }}
+          className="glass glass-encina mx-auto max-w-5xl rounded-3xl overflow-hidden"
         >
           <div className="grid grid-cols-1 md:grid-cols-[5fr_7fr]">
 
@@ -136,7 +130,7 @@ export default function ContactSection() {
             <div
               className="p-8 lg:p-10 flex flex-col gap-6"
               style={{
-                background: 'rgba(17,19,24,0.5)',
+                background: 'rgba(10,10,10,0.25)',
                 borderRight: '1px solid rgba(74,124,47,0.2)',
               }}
             >
@@ -164,11 +158,11 @@ export default function ContactSection() {
               {/* Contact info */}
               <div className="flex flex-col gap-3 mt-auto">
                 <a
-                  href="mailto:info@pellisoft.es"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   className="flex items-center gap-2 font-mono text-sm text-muted_light hover:text-white_soft transition-colors"
                 >
                   <Mail size={14} className="text-tech_blue_light flex-shrink-0" />
-                  info@pellisoft.es
+                  {CONTACT_EMAIL}
                 </a>
                 <div className="flex items-center gap-2 font-mono text-xs text-muted">
                   <MapPin size={13} className="text-arcilla flex-shrink-0" />
@@ -244,7 +238,7 @@ export default function ContactSection() {
 
                 {formState === 'error' && (
                   <p className="text-center font-mono text-xs text-red-400">
-                    Si el error persiste, escríbenos a info@pellisoft.es
+                    Si el error persiste, escríbenos a {CONTACT_EMAIL}
                   </p>
                 )}
               </form>

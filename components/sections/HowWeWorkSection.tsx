@@ -38,7 +38,7 @@ export default function HowWeWorkSection() {
   const shouldReduceMotion = useReducedMotion()
 
   return (
-    <section id="proceso" className="w-full bg-carbon py-20 lg:py-28">
+    <section id="proceso" className="w-full bg-carbon/40 py-20 lg:py-28">
       {/* Top separator */}
       <div className="w-full border-t border-encina/20 mb-0" />
 

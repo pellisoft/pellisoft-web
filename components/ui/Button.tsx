@@ -30,11 +30,11 @@ export default function Button({
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
       className={cn(
-        'inline-flex items-center justify-center rounded-lg font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        'inline-flex items-center justify-center rounded-full font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
         sizeClasses[size],
         variant === 'primary'
-          ? 'bg-gradient-to-r from-[#1E40AF] to-[#7C3AED] text-white shadow-lg shadow-[#1E40AF]/25 hover:brightness-110'
-          : 'border border-[rgba(245,245,245,0.3)] bg-transparent text-[#F5F5F5] hover:bg-white/5',
+          ? 'liquid-button text-white'
+          : 'glass glass-neutral glass-interactive text-[#F5F5F5]',
         className
       )}
       {...props}

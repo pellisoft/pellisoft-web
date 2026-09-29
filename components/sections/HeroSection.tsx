@@ -41,7 +41,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="w-full relative min-h-screen bg-carbon flex items-center"
+      className="w-full relative min-h-screen bg-carbon/40 flex items-center"
     >
       {/* Background gradients */}
       <div
@@ -97,14 +97,14 @@ export default function HeroSection() {
             >
               <button
                 onClick={() => scrollTo('contacto')}
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-gradient-tech px-7 py-4 text-base font-semibold text-white_soft transition-all duration-200 hover:brightness-110 hover:scale-[1.02] cursor-pointer"
+                className="liquid-button inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white_soft hover:scale-[1.02] cursor-pointer"
               >
                 Hablar con Pellisoft
                 <ArrowRight size={18} />
               </button>
               <button
                 onClick={() => scrollTo('proyectos')}
-                className="inline-flex items-center justify-center gap-2 rounded-md border border-white_soft/20 bg-white_soft/5 px-7 py-4 text-base font-medium text-white_soft transition-all duration-200 hover:bg-white_soft/10 hover:border-white_soft/40 cursor-pointer"
+                className="glass glass-neutral glass-interactive !rounded-full inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-medium text-white_soft cursor-pointer"
               >
                 <Play size={16} />
                 Ver proyectos

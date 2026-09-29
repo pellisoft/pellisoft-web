@@ -16,8 +16,11 @@ const RATE_LIMIT_MS = 60_000 // 60 seconds
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
+    // Behind Cloudflare the real client IP comes in cf-connecting-ip
     const forwarded = request.headers.get('x-forwarded-for')
-    const ip = forwarded ? forwarded.split(',')[0].trim() : 'unknown'
+    const ip =
+      request.headers.get('cf-connecting-ip') ??
+      (forwarded ? forwarded.split(',')[0].trim() : 'unknown')
     const now = Date.now()
     const lastSubmit = rateLimitMap.get(ip)
     if (lastSubmit && now - lastSubmit < RATE_LIMIT_MS) {
@@ -45,6 +48,7 @@ export async function POST(request: NextRequest) {
     // Check env config
     const apiKey = process.env.RESEND_API_KEY
     const emailTo = process.env.CONTACT_EMAIL_TO
+    const emailFrom = process.env.CONTACT_EMAIL_FROM ?? 'Pellisoft Web <web@pellisoft.com>'
 
     if (!apiKey || !emailTo) {
       console.error('[contact] Missing RESEND_API_KEY or CONTACT_EMAIL_TO')
@@ -65,8 +69,9 @@ export async function POST(request: NextRequest) {
       timeStyle: 'short',
     })
 
-    await resend.emails.send({
-      from: 'web@pellisoft.es',
+    // Resend does not throw on API errors: it returns { data, error }
+    const { data: sent, error } = await resend.emails.send({
+      from: emailFrom,
       to: emailTo,
       replyTo: data.email,
       subject: `Nuevo contacto web: ${data.name}${data.company ? ` · ${data.company}` : ''}`,
@@ -78,6 +83,16 @@ export async function POST(request: NextRequest) {
         sentAt,
       }),
     })
+
+    if (error) {
+      console.error('[contact] Resend error:', error.name, error.message)
+      return NextResponse.json(
+        { error: 'No se pudo enviar el mensaje' },
+        { status: 502 }
+      )
+    }
+
+    console.info('[contact] Email sent:', sent?.id)
 
     // Record rate limit
     rateLimitMap.set(ip, now)
